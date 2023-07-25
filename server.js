@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 app.use(cookieParser());
 
-
+ 
 // Define the GET request endpoint to display all project endpoints
 app.get('/', handleEndPoints);
 // Route for inserting data into the table
