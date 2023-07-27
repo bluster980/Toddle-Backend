@@ -259,6 +259,54 @@ async function deleteJournal(journal_id){
 //   });
 // }
 
+// async function studentFeed(uidVal) {
+//   console.log("Student Feed uidVal:", uidVal);
+//   const searchQuery = `SELECT * FROM stufeed WHERE uid = ${uidVal}`;
+//   return new Promise(async (resolve, reject) => {
+//     try {
+//       const stufeedResults = await new Promise((resolve, reject) => {
+//         connection.query(searchQuery, (err, stufeedResults) => {
+//           if (err) {
+//             console.error(err);
+//             reject(err);
+//           } else {
+//             resolve(stufeedResults);
+//           }
+//         });
+//       });
+
+//       // Get all the journal_ids from the stufeedResults
+//       const journalIds = stufeedResults.map((item) => item.journal_id);
+//       console.log("Journal IDs:", journalIds);
+
+//       // Check if journalIds is empty
+//       if (journalIds.length === 0) {
+//         console.log("No journals found for the student.");
+//         resolve([]); // Return an empty array as there are no journals for the student
+//       } else {
+//         // Get the current datetime using await
+//         const currentDate = await getCurrentDateTime();
+//         // Construct a query to get the journals for the given journal_ids and the published_at is not greater than the current datetime
+//         const journalSearchQuery = `SELECT * FROM journal WHERE journal_id IN (${journalIds.join(',')}) AND published_at <= '${currentDate}'`;
+
+//         // Execute the new query to get the filtered journals
+//         connection.query(journalSearchQuery, (err, journalResults) => {
+//           if (err) {
+//             console.error(err);
+//             reject(err);
+//           } else {
+//             console.log("Student Journals:", journalResults);
+//             resolve(journalResults);
+//           }
+//         });
+//       }
+//     } catch (err) {
+//       console.error('Error getting current datetime:', err);
+//       reject(err);
+//     }
+//   });
+// }
+
 async function studentFeed(uidVal) {
   console.log("Student Feed uidVal:", uidVal);
   const searchQuery = `SELECT * FROM stufeed WHERE uid = ${uidVal}`;
@@ -289,16 +337,20 @@ async function studentFeed(uidVal) {
         // Construct a query to get the journals for the given journal_ids and the published_at is not greater than the current datetime
         const journalSearchQuery = `SELECT * FROM journal WHERE journal_id IN (${journalIds.join(',')}) AND published_at <= '${currentDate}'`;
 
-        // Execute the new query to get the filtered journals
-        connection.query(journalSearchQuery, (err, journalResults) => {
-          if (err) {
-            console.error(err);
-            reject(err);
-          } else {
-            console.log("Student Journals:", journalResults);
-            resolve(journalResults);
-          }
+        // Execute the new query to get the filtered journals using await
+        const journalResults = await new Promise((resolve, reject) => {
+          connection.query(journalSearchQuery, (err, journalResults) => {
+            if (err) {
+              console.error(err);
+              reject(err);
+            } else {
+              console.log("Student Journals:", journalResults);
+              resolve(journalResults);
+            }
+          });
         });
+
+        resolve(journalResults);
       }
     } catch (err) {
       console.error('Error getting current datetime:', err);
