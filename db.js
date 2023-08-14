@@ -1,9 +1,10 @@
 // db.js
 const mysql = require('mysql');
 const bcrypt = require('bcryptjs');
-const dotenv = require('dotenv').config();
+// const dotenv = require('dotenv').config();
 
-const connection = mysql.createConnection(DATABASE_URL=process.env.DB_URL);
+const connection = mysql.createConnection(DATABASE_URL='mysql://r7oyd5y4cs0d21zrr4gm:pscale_pw_uhqbZL4oEqwoeQGj5ZpOjulmalArNqxOF6aDOXzTreZ@aws.connect.psdb.cloud/journal-app?ssl={"rejectUnauthorized":true}'
+);
 
 connection.connect((err) => {
   if (err) {
